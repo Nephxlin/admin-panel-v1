@@ -221,7 +221,9 @@ export default function CategoryGamesPage() {
               </div>
               <div className="p-2">
                 <p className="text-white text-sm font-medium truncate">{game.name}</p>
-                <p className="text-gray-400 text-xs truncate">{game.provider}</p>
+                <p className="text-gray-400 text-xs truncate">
+                  {typeof game.provider === 'string' ? game.provider : game.provider.name}
+                </p>
               </div>
             </div>
           ))}
@@ -324,7 +326,9 @@ export default function CategoryGamesPage() {
                         <p className="text-white text-xs font-medium truncate">
                           {game.name}
                         </p>
-                        <p className="text-gray-400 text-xs truncate">{game.provider}</p>
+                        <p className="text-gray-400 text-xs truncate">
+                          {typeof game.provider === 'string' ? game.provider : game.provider.name}
+                        </p>
                       </div>
                     </div>
                   ))}

@@ -241,7 +241,7 @@ export default function UserDetailsPage() {
     {
       key: 'status',
       label: 'Status',
-      render: (row: any) => <StatusBadge status={row.status} statusText={row.status} />,
+      render: (row: any) => <StatusBadge status={row.status} />,
     },
     {
       key: 'createdAt',
@@ -260,7 +260,7 @@ export default function UserDetailsPage() {
     {
       key: 'status',
       label: 'Status',
-      render: (row: any) => <StatusBadge status={row.status} statusText={row.status} />,
+      render: (row: any) => <StatusBadge status={row.status} />,
     },
     {
       key: 'createdAt',

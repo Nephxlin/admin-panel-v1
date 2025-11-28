@@ -340,7 +340,7 @@ export default function GamesPage() {
       key: 'status',
       label: 'Status',
       render: (row: any) => (
-        <StatusBadge status={row.status} statusText={row.status === 1 ? 'Ativo' : 'Inativo'} />
+        <StatusBadge status={row.status} />
       ),
     },
     {

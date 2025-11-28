@@ -134,21 +134,6 @@ export const adminApi = {
   },
 
   // ============================================
-  // BANNERS
-  // ============================================
-  banners: {
-    list: (page?: number, limit?: number) =>
-      apiClient.get('/api/admin/banners', { params: { page, limit } }),
-    get: (id: number) => apiClient.get(`/api/admin/banners/${id}`),
-    create: (data: any) => apiClient.post('/api/admin/banners', data),
-    update: (id: number, data: any) =>
-      apiClient.put(`/api/admin/banners/${id}`, data),
-    delete: (id: number) => apiClient.delete(`/api/admin/banners/${id}`),
-    toggleStatus: (id: number) =>
-      apiClient.post(`/api/admin/banners/${id}/toggle-status`),
-  },
-
-  // ============================================
   // MISSIONS
   // ============================================
   missions: {
