@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { DataTable } from '@/components/ui/DataTable';
 import Image from 'next/image';
+import { getImageUrl } from '@/lib/image-utils';
 
 interface Banner {
   id: number;
@@ -186,7 +187,7 @@ export default function BannersPage() {
       link: banner.link || '',
       isActive: banner.isActive,
     });
-    setImagePreview(`http://localhost:3005/uploads/${banner.image}`);
+    setImagePreview(getImageUrl(banner.image));
     setIsModalOpen(true);
   };
 
@@ -247,7 +248,7 @@ export default function BannersPage() {
       render: (row: Banner) => (
         <div className="relative w-24 h-16 rounded-lg overflow-hidden">
           <Image
-            src={`http://localhost:3005/uploads/${row.image}`}
+            src={getImageUrl(row.image)}
             alt={row.title}
             fill
             className="object-cover"

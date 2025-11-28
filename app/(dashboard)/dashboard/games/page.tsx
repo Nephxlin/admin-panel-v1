@@ -3,9 +3,9 @@
 import { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { adminApi } from '@/lib/api';
-import { API_URL } from '@/lib/axios';
 import { DataTable } from '@/components/ui/DataTable';
 import { StatusBadge } from '@/components/ui/StatusBadge';
+import { getImageUrl, getImageUrlWithCache } from '@/lib/image-utils';
 import {
   Plus,
   Edit,
@@ -227,7 +227,7 @@ export default function GamesPage() {
       status: game.status,
     });
     setImagePreview(
-      game.cover ? `${API_URL}/uploads/${game.cover}` : ''
+      game.cover ? getImageUrl(game.cover) : ''
     );
     setIsModalOpen(true);
   };
@@ -278,7 +278,7 @@ export default function GamesPage() {
           <div className="w-16 h-16 bg-gray-300 dark:bg-gray-600 rounded overflow-hidden flex items-center justify-center">
             {row.cover ? (
               <img
-                src={`${API_URL}/uploads/${row.cover}?v=${cacheBuster}`}
+                src={getImageUrlWithCache(row.cover, cacheBuster)}
                 alt={row.gameName}
                 className="w-full h-full object-cover"
                 onError={(e) => {
