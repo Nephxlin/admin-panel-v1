@@ -348,3 +348,4 @@ O sistema está 100% funcional e pronto para gerenciar pixels Kwai.
 **Versão**: 1.0.0  
 **Data**: Novembro 2025
 
+
