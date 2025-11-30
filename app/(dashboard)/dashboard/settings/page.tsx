@@ -422,17 +422,17 @@ export default function SettingsPage() {
                 <strong>📍 Para que serve:</strong> Esta URL será usada pelo motor de jogos para fazer callbacks (consultar saldo, processar apostas, etc.)
               </p>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                URL do Backend <span className="text-red-500">*</span>
-              </label>
-              <input
-                {...registerGames('apiEndpoint')}
-                type="url"
-                placeholder="https://api.seudominio.com"
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:text-white"
-              />
-              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  URL do Backend <span className="text-red-500">*</span>
+                </label>
+                <input
+                  {...registerGames('apiEndpoint')}
+                  type="url"
+                  placeholder="https://api.seudominio.com"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:text-white"
+                />
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                 URL base da sua API (onde o motor fará callbacks para: /api/pgsoft/user_balance e /api/pgsoft/game_callback)
               </p>
             </div>
@@ -444,7 +444,7 @@ export default function SettingsPage() {
               <div>
                 <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
                   PGSoft - Motor de Jogos
-                </h2>
+            </h2>
                 <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
                   Configuração de conexão com a API Node.js que processa os jogos PGSoft
                 </p>
@@ -488,7 +488,7 @@ export default function SettingsPage() {
                   URL alternativa para servir os assets dos jogos. Deixe vazio para usar a mesma URL da API acima.
                 </p>
               </div>
-            </div>
+              </div>
 
             {/* Card informativo sobre Agents */}
             <div className="mt-6 p-4 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-lg border border-purple-200 dark:border-purple-700">
