@@ -16,6 +16,7 @@ import {
   Crown,
   Settings,
   Activity,
+  Server,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -79,6 +80,11 @@ const menuItems = [
     title: 'Kwai Pixels',
     href: '/dashboard/kwai-pixels',
     icon: Activity,
+  },
+  {
+    title: 'Motor PGSoft',
+    href: '/dashboard/pgsoft-agents',
+    icon: Server,
   },
   {
     title: 'Configurações',

@@ -14,10 +14,12 @@ export const adminApi = {
   // ============================================
   dashboard: {
     getStats: () => apiClient.get('/api/admin/dashboard/stats'),
-    getTransactions: (limit?: number) =>
-      apiClient.get('/api/admin/dashboard/transactions', { params: { limit } }),
+    getTransactions: (page?: number, limit?: number) =>
+      apiClient.get('/api/admin/dashboard/transactions', { params: { page, limit } }),
     getRevenueChart: (days?: number) =>
       apiClient.get('/api/admin/dashboard/revenue-chart', { params: { days } }),
+    getCanceledTransactions: (days?: number) =>
+      apiClient.get('/api/admin/dashboard/canceled-transactions', { params: { days } }),
   },
 
   // ============================================
@@ -214,6 +216,18 @@ export const adminApi = {
     delete: (id: number) => apiClient.delete(`/api/admin/kwai-pixels/${id}`),
     toggleStatus: (id: number, isActive: boolean) =>
       apiClient.post(`/api/admin/kwai-pixels/${id}/toggle-status`, { isActive }),
+  },
+
+  // ============================================
+  // PGSOFT AGENTS
+  // ============================================
+  pgsoftAgents: {
+    list: () => apiClient.get('/api/admin/pgsoft/agents'),
+    get: (id: number) => apiClient.get(`/api/admin/pgsoft/agents/${id}`),
+    create: (data: any) => apiClient.post('/api/admin/pgsoft/agents', data),
+    update: (id: number, data: any) =>
+      apiClient.put(`/api/admin/pgsoft/agents/${id}`, data),
+    delete: (id: number) => apiClient.delete(`/api/admin/pgsoft/agents/${id}`),
   },
 };
 

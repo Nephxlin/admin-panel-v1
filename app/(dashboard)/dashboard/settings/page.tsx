@@ -5,12 +5,13 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { adminApi } from '@/lib/api';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
-import { Save, Settings as SettingsIcon, Key, CreditCard } from 'lucide-react';
+import { Save, Settings as SettingsIcon, Key, CreditCard, Eye, EyeOff } from 'lucide-react';
 
 type Tab = 'general' | 'games' | 'gateways';
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState<Tab>('general');
+  const [showSensitiveData, setShowSensitiveData] = useState(false);
   const queryClient = useQueryClient();
 
   // Query para configurações gerais
@@ -378,56 +379,164 @@ export default function SettingsPage() {
 
       {activeTab === 'games' && (
         <form onSubmit={handleSubmitGames(onSubmitGames)} className="space-y-6">
-          {/* PGSoft Keys */}
+          {/* Botão para mostrar/ocultar dados sensíveis */}
+          <div className="bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-lg p-4 border border-purple-200 dark:border-purple-700">
+            <div className="flex items-center justify-between">
+              <div className="flex-1">
+                <h3 className="text-sm font-semibold text-gray-900 dark:text-white">
+                  Dados Sensíveis
+                </h3>
+                <p className="text-xs text-gray-600 dark:text-gray-400 mt-1">
+                  {showSensitiveData 
+                    ? 'Os valores sensíveis estão visíveis' 
+                    : 'Os valores sensíveis estão ocultos por segurança'}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowSensitiveData(!showSensitiveData)}
+                className="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+              >
+                {showSensitiveData ? (
+                  <>
+                    <EyeOff className="w-4 h-4" />
+                    Ocultar Valores
+                  </>
+                ) : (
+                  <>
+                    <Eye className="w-4 h-4" />
+                    Mostrar Valores
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+
+          {/* Configurações do Backend */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-              PGSoft - Chaves de Integração
+              Configurações do Backend
             </h2>
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  URL da API Node PGSoft <span className="text-red-500">*</span>
+                  URL do Backend <span className="text-red-500">*</span>
+                </label>
+                <input
+                  {...registerGames('apiEndpoint')}
+                  type="url"
+                  placeholder="https://api.seudominio.com"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:text-white"
+                />
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                  URL base da sua API (onde o motor de jogos vai fazer callbacks para consultar/atualizar saldo)
+                </p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Código do Operador <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    {...registerGames('agentCode')}
+                    type="text"
+                    placeholder="admin"
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:text-white"
+                  />
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    Identificador único do operador no sistema de jogos
+                  </p>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Token de Autenticação <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    {...registerGames('agentToken')}
+                    type={showSensitiveData ? "text" : "password"}
+                    placeholder="Token de autenticação"
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:text-white"
+                  />
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                    Token usado para autenticar requisições ao motor de jogos
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* PGSoft - Motor de Jogos */}
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            <div className="flex items-start justify-between mb-4">
+              <div>
+                <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                  PGSoft - Motor de Jogos
+                </h2>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                  API Node.js que processa e serve os jogos PGSoft
+                </p>
+              </div>
+            </div>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  URL da API PGSoft Node <span className="text-red-500">*</span>
                 </label>
                 <input
                   {...registerGames('pgsoft')}
                   type="url"
-                  placeholder="http://localhost:3010"
+                  placeholder="https://pgsoft.seudominio.com"
                   className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:text-white"
                 />
                 <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                  URL da API Node.js que serve os jogos PGSoft (ex: api-pgsoft-node)
+                  URL onde está rodando o motor de jogos (api-pgsoft-node). Esta API se comunica com seu backend via callbacks.
                 </p>
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  URL Pública dos Jogos (Game URL)
+                  URL Pública dos Jogos
                 </label>
                 <input
                   {...registerGames('pgsoftGameUrl')}
                   type="url"
-                  placeholder="https://seudominio.com"
+                  placeholder="https://jogos.seudominio.com (opcional)"
                   className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:text-white"
                 />
                 <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                  URL pública para acessar os jogos (deixe em branco para usar a mesma URL da API)
+                  URL alternativa para servir os assets dos jogos. Deixe vazio para usar a mesma URL da API acima.
                 </p>
               </div>
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Secret Key
+                  Chave Secreta (Secret Key) <span className="text-red-500">*</span>
                 </label>
                 <input
                   {...registerGames('pgsoftSecretKey')}
-                  type="password"
-                  placeholder="Chave secreta para callbacks"
+                  type={showSensitiveData ? "text" : "password"}
+                  placeholder="Chave secreta para validação"
                   className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:text-white"
                 />
                 <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                  Chave secreta para validar callbacks da API PGSoft
+                  Chave secreta compartilhada entre seu backend e a API PGSoft para validar callbacks de apostas/ganhos
                 </p>
               </div>
+            </div>
+
+            {/* Diagrama de comunicação */}
+            <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-700">
+              <p className="text-xs font-semibold text-blue-900 dark:text-blue-300 mb-2">
+                💡 Como funciona:
+              </p>
+              <ol className="text-xs text-blue-800 dark:text-blue-200 space-y-1">
+                <li>1. Backend inicia jogo enviando agentToken + secretKey para API PGSoft</li>
+                <li>2. API PGSoft consulta saldo via callback: <code className="bg-blue-100 dark:bg-blue-800 px-1 rounded">apiEndpoint/pgsoft/user_balance</code></li>
+                <li>3. Durante o jogo, notifica apostas/ganhos: <code className="bg-blue-100 dark:bg-blue-800 px-1 rounded">apiEndpoint/pgsoft/game_callback</code></li>
+                <li>4. Seu backend atualiza o saldo e responde com novo saldo</li>
+              </ol>
             </div>
           </div>
 
