@@ -104,7 +104,10 @@ export default function PGSoftAgentsPage() {
   const handleDelete = (id: number, agentcode: string) => {
     if (
       confirm(
-        `Tem certeza que deseja deletar o agent "${agentcode}"?\n\nEsta ação não pode ser desfeita.`
+        `⚠️ ATENÇÃO: Tem certeza que deseja deletar o agent "${agentcode}"?\n\n` +
+        `Esta ação não pode ser desfeita.\n\n` +
+        `IMPORTANTE: Se este agent tiver usuários associados, a exclusão falhará. ` +
+        `Você precisará remover ou transferir os usuários primeiro.`
       )
     ) {
       deleteMutation.mutate(id);
@@ -206,10 +209,10 @@ export default function PGSoftAgentsPage() {
             </div>
             <div>
               <h3 className="font-semibold text-gray-900 dark:text-white text-sm mb-1">
-                Sincronização Importante
+                ✅ Fonte Única de Credenciais
               </h3>
               <p className="text-xs text-gray-600 dark:text-gray-400">
-                As credenciais aqui devem ser <strong>idênticas</strong> às configuradas em Configurações → Chaves de Jogos.
+                Esta é a <strong>ÚNICA</strong> página onde você configura as credenciais de autenticação (tokens e secret keys). O backend usa essas credenciais para se comunicar com o motor.
               </p>
             </div>
           </div>
@@ -228,6 +231,38 @@ export default function PGSoftAgentsPage() {
               <p className="text-xs text-gray-600 dark:text-gray-400">
                 Controle fino da taxa de ganho dos jogadores. Valores entre 30-50% são recomendados para equilíbrio.
               </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Aviso sobre sincronização com Settings */}
+      <div className="mb-6 bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-900/20 dark:to-orange-900/20 border-2 border-yellow-300 dark:border-yellow-600 rounded-lg p-5">
+        <div className="flex items-start gap-4">
+          <div className="p-3 bg-yellow-400 dark:bg-yellow-600 rounded-lg">
+            <AlertCircle className="w-6 h-6 text-white" />
+          </div>
+          <div className="flex-1">
+            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">
+              ⚙️ Configuração em 2 Passos
+            </h3>
+            <div className="space-y-3">
+              <div className="flex items-start gap-3">
+                <div className="flex-shrink-0 w-6 h-6 bg-purple-500 text-white rounded-full flex items-center justify-center text-sm font-bold">1</div>
+                <div>
+                  <p className="text-sm font-semibold text-gray-900 dark:text-white">Configure o Agent aqui (esta página)</p>
+                  <p className="text-xs text-gray-700 dark:text-gray-300 mt-1">Defina agentToken, secretKey, callback URL e probabilidades</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-3">
+                <div className="flex-shrink-0 w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center text-sm font-bold">2</div>
+                <div>
+                  <p className="text-sm font-semibold text-gray-900 dark:text-white">Configure a URL da API em Settings</p>
+                  <p className="text-xs text-gray-700 dark:text-gray-300 mt-1">
+                    Vá para <a href="/dashboard/settings" className="underline text-blue-600 dark:text-blue-400">Configurações → Chaves de Jogos</a> e defina onde está rodando o motor PGSoft
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -255,7 +290,7 @@ export default function PGSoftAgentsPage() {
               <span className="text-lg font-bold text-blue-600 dark:text-blue-400">2</span>
             </div>
             <p className="text-xs text-gray-600 dark:text-gray-400 font-medium mb-1">Backend</p>
-            <p className="text-xs text-gray-500 dark:text-gray-500">Envia credenciais ao motor</p>
+            <p className="text-xs text-gray-500 dark:text-gray-500">Envia credenciais daqui</p>
           </div>
           <div className="flex items-center justify-center">
             <div className="text-blue-400">⇄</div>
@@ -265,7 +300,7 @@ export default function PGSoftAgentsPage() {
               <span className="text-lg font-bold text-green-600 dark:text-green-400">3</span>
             </div>
             <p className="text-xs text-gray-600 dark:text-gray-400 font-medium mb-1">Motor PGSoft</p>
-            <p className="text-xs text-gray-500 dark:text-gray-500">Callbacks via Agent</p>
+            <p className="text-xs text-gray-500 dark:text-gray-500">Valida e executa</p>
           </div>
         </div>
         <div className="mt-4 p-3 bg-gray-50 dark:bg-gray-700/50 rounded text-xs">
@@ -539,9 +574,19 @@ function AgentFormModal({
                   <h4 className="font-semibold text-blue-900 dark:text-blue-100 text-sm mb-1">
                     O que é um Agent?
                   </h4>
-                  <p className="text-xs text-blue-800 dark:text-blue-200">
-                    Um agent é um operador cadastrado no motor de jogos PGSoft. Ele contém as credenciais de autenticação e as configurações de probabilidade que controlam o comportamento dos jogos.
+                  <p className="text-xs text-blue-800 dark:text-blue-200 mb-2">
+                    Um agent é um operador cadastrado no motor de jogos PGSoft (banco SQLite). Ele contém:
                   </p>
+                  <ul className="text-xs text-blue-800 dark:text-blue-200 list-disc list-inside space-y-1">
+                    <li><strong>Credenciais:</strong> agentToken e secretKey que o backend envia para iniciar jogos</li>
+                    <li><strong>Callback URL:</strong> Para onde o motor envia notificações de apostas/ganhos</li>
+                    <li><strong>Probabilidades:</strong> Controle fino do comportamento dos jogos</li>
+                  </ul>
+                  <div className="mt-3 p-2 bg-blue-100 dark:bg-blue-800 rounded">
+                    <p className="text-xs font-semibold text-blue-900 dark:text-blue-100">
+                      💡 Primeiro Passo: Configure o Agent aqui antes de usar os jogos!
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>

@@ -5,7 +5,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { adminApi } from '@/lib/api';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
-import { Save, Settings as SettingsIcon, Key, CreditCard, Eye, EyeOff } from 'lucide-react';
+import { Save, Settings as SettingsIcon, Settings, Key, CreditCard, Eye, EyeOff } from 'lucide-react';
 
 type Tab = 'general' | 'games' | 'gateways';
 
@@ -412,57 +412,29 @@ export default function SettingsPage() {
             </div>
           </div>
 
-          {/* Configurações do Backend */}
+          {/* Configurações do Backend - Callbacks */}
           <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-              Configurações do Backend
+              Callbacks do Backend
             </h2>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  URL do Backend <span className="text-red-500">*</span>
-                </label>
-                <input
-                  {...registerGames('apiEndpoint')}
-                  type="url"
-                  placeholder="https://api.seudominio.com"
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:text-white"
-                />
-                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                  URL base da sua API (onde o motor de jogos vai fazer callbacks para consultar/atualizar saldo)
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Código do Operador <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    {...registerGames('agentCode')}
-                    type="text"
-                    placeholder="admin"
-                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:text-white"
-                  />
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    Identificador único do operador no sistema de jogos
-                  </p>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Token de Autenticação <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    {...registerGames('agentToken')}
-                    type={showSensitiveData ? "text" : "password"}
-                    placeholder="Token de autenticação"
-                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:text-white"
-                  />
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                    Token usado para autenticar requisições ao motor de jogos
-                  </p>
-                </div>
-              </div>
+            <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg">
+              <p className="text-sm text-blue-800 dark:text-blue-200">
+                <strong>📍 Para que serve:</strong> Esta URL será usada pelo motor de jogos para fazer callbacks (consultar saldo, processar apostas, etc.)
+              </p>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                URL do Backend <span className="text-red-500">*</span>
+              </label>
+              <input
+                {...registerGames('apiEndpoint')}
+                type="url"
+                placeholder="https://api.seudominio.com"
+                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:text-white"
+              />
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                URL base da sua API (onde o motor fará callbacks para: /api/pgsoft/user_balance e /api/pgsoft/game_callback)
+              </p>
             </div>
           </div>
 
@@ -474,9 +446,16 @@ export default function SettingsPage() {
                   PGSoft - Motor de Jogos
                 </h2>
                 <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
-                  API Node.js que processa e serve os jogos PGSoft
+                  Configuração de conexão com a API Node.js que processa os jogos PGSoft
                 </p>
               </div>
+              <a
+                href="/dashboard/pgsoft-agents"
+                className="flex items-center gap-2 px-4 py-2 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 rounded-lg hover:bg-purple-200 dark:hover:bg-purple-900/50 text-sm font-medium"
+              >
+                <Settings className="w-4 h-4" />
+                Gerenciar Agents
+              </a>
             </div>
             
             <div className="space-y-4">
@@ -491,7 +470,7 @@ export default function SettingsPage() {
                   className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:text-white"
                 />
                 <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                  URL onde está rodando o motor de jogos (api-pgsoft-node). Esta API se comunica com seu backend via callbacks.
+                  URL onde está rodando o motor de jogos (api-pgsoft-node)
                 </p>
               </div>
 
@@ -509,33 +488,41 @@ export default function SettingsPage() {
                   URL alternativa para servir os assets dos jogos. Deixe vazio para usar a mesma URL da API acima.
                 </p>
               </div>
+            </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Chave Secreta (Secret Key) <span className="text-red-500">*</span>
-                </label>
-                <input
-                  {...registerGames('pgsoftSecretKey')}
-                  type={showSensitiveData ? "text" : "password"}
-                  placeholder="Chave secreta para validação"
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:text-white"
-                />
-                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                  Chave secreta compartilhada entre seu backend e a API PGSoft para validar callbacks de apostas/ganhos
-                </p>
+            {/* Card informativo sobre Agents */}
+            <div className="mt-6 p-4 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 rounded-lg border border-purple-200 dark:border-purple-700">
+              <div className="flex items-start gap-3">
+                <div className="p-2 bg-purple-500 rounded-lg">
+                  <Key className="w-5 h-5 text-white" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-sm font-semibold text-gray-900 dark:text-white mb-2">
+                    ✅ Credenciais e Probabilidades
+                  </h3>
+                  <p className="text-xs text-gray-700 dark:text-gray-300 mb-3">
+                    As <strong>credenciais de autenticação</strong> (agentToken, secretKey) e as <strong>probabilidades de ganho</strong> agora são configuradas exclusivamente na página de <strong>Agents PGSoft</strong>.
+                  </p>
+                  <a
+                    href="/dashboard/pgsoft-agents"
+                    className="inline-flex items-center gap-2 px-3 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 text-xs font-medium"
+                  >
+                    <Settings className="w-4 h-4" />
+                    Configurar Agents e Credenciais →
+                  </a>
+                </div>
               </div>
             </div>
 
-            {/* Diagrama de comunicação */}
+            {/* Diagrama de comunicação simplificado */}
             <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-700">
               <p className="text-xs font-semibold text-blue-900 dark:text-blue-300 mb-2">
-                💡 Como funciona:
+                💡 Fluxo de Comunicação:
               </p>
               <ol className="text-xs text-blue-800 dark:text-blue-200 space-y-1">
-                <li>1. Backend inicia jogo enviando agentToken + secretKey para API PGSoft</li>
-                <li>2. API PGSoft consulta saldo via callback: <code className="bg-blue-100 dark:bg-blue-800 px-1 rounded">apiEndpoint/pgsoft/user_balance</code></li>
-                <li>3. Durante o jogo, notifica apostas/ganhos: <code className="bg-blue-100 dark:bg-blue-800 px-1 rounded">apiEndpoint/pgsoft/game_callback</code></li>
-                <li>4. Seu backend atualiza o saldo e responde com novo saldo</li>
+                <li><strong>1.</strong> Seu Backend se conecta à API PGSoft usando a URL configurada acima</li>
+                <li><strong>2.</strong> A API PGSoft valida credenciais através dos Agents cadastrados</li>
+                <li><strong>3.</strong> Durante o jogo, a API faz callbacks para: <code className="bg-blue-100 dark:bg-blue-800 px-1 rounded">{'{apiEndpoint}'}/pgsoft/*</code></li>
               </ol>
             </div>
           </div>
